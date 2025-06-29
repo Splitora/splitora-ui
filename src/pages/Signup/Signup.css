@@ -1,0 +1,4 @@
+/* Signup Page Styles (reuse Login styles) */
+@import '../Login/Login.css';
+
+/* You can add signup-specific overrides here if needed */ 

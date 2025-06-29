@@ -1,0 +1,120 @@
+/* Profile Tab Styles */
+.profile-header {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.user-id {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-family: monospace;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.profile-header h2 {
+  text-align: center;
+  margin: 0;
+}
+
+.profile-section {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  align-items: start;
+  margin-bottom: 2rem;
+}
+
+.profile-avatar {
+  text-align: center;
+}
+
+.avatar-placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  margin: 0 auto 1rem;
+}
+
+.avatar-text {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-item label {
+  font-weight: 500;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Profile Actions */
+.profile-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.edit-profile-btn {
+  min-width: 120px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-header {
+    text-align: center;
+  }
+  
+  .user-id {
+    position: static;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+  
+  .profile-section {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .profile-actions {
+    justify-content: center;
+  }
+} 
