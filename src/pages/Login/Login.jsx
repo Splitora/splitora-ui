@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../../components';
+import { useAuth } from '../../hooks';
+import { useAuthState } from '../../hooks/useAuthState';
 import './Login.css';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const { login: updateAuthState } = useAuthState();
+  
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
@@ -57,23 +62,21 @@ const Login = () => {
       return;
     }
 
-    setIsLoading(true);
-    
     try {
-      // TODO: Implement actual login API call
-      console.log('Login attempt:', formData);
+      const response = await login.execute(formData);
+      console.log('Login successful:', response);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Update auth state immediately after successful login
+      updateAuthState();
       
-      // TODO: Handle successful login
-      console.log('Login successful');
+      // Redirect to group page on successful login
+      navigate('/group');
       
     } catch (error) {
       console.error('Login failed:', error);
-      setErrors({ general: 'Invalid email or password' });
-    } finally {
-      setIsLoading(false);
+      setErrors({ 
+        general: error.message || 'Invalid email or password' 
+      });
     }
   };
 
@@ -146,9 +149,9 @@ const Login = () => {
             variant="primary"
             size="large"
             className="submit-btn"
-            disabled={isLoading}
+            disabled={login.loading}
           >
-            {isLoading ? 'Signing in...' : 'Sign In'}
+            {login.loading ? 'Signing in...' : 'Sign In'}
           </Button>
         </form>
 

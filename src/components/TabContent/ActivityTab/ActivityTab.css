@@ -10,7 +10,7 @@
   display: flex;
   gap: 1rem;
   padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-color);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
   transition: transform var(--transition-fast);

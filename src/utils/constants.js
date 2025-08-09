@@ -3,11 +3,12 @@
  */
 
 // API Configuration
-export const API_BASE_URL = process.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+export const API_BASE_URL = 'http://localhost:8081/api/v1';
 
 // Local Storage Keys
 export const STORAGE_KEYS = {
   USER_TOKEN: 'user_token',
+  REFRESH_TOKEN: 'refresh_token',
   USER_PREFERENCES: 'user_preferences',
   THEME: 'theme'
 };
@@ -45,4 +46,12 @@ export const SUCCESS_MESSAGES = {
   SAVE_SUCCESS: 'Data saved successfully.',
   DELETE_SUCCESS: 'Item deleted successfully.',
   UPDATE_SUCCESS: 'Data updated successfully.'
+};
+
+// Authentication States
+export const AUTH_STATES = {
+  LOGGED_IN: 'logged_in',
+  LOGGED_OUT: 'logged_out',
+  EXPIRED: 'expired',
+  REFRESHING: 'refreshing'
 }; 

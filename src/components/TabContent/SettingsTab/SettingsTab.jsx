@@ -1,21 +1,32 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../Button';
+import { useAuthState } from '../../../hooks/useAuthState';
+import { authAPI } from '../../../utils/api';
 import './SettingsTab.css';
 
 const SettingsTab = () => {
   const navigate = useNavigate();
+  const { logout } = useAuthState();
 
-  const handleLogout = () => {
-    // TODO: Implement actual logout logic (clear tokens, session, etc.)
-    console.log('Logging out...');
-    
-    // Clear any stored authentication data
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
-    
-    // Navigate to login page
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      console.log('Logging out...');
+      
+      // Call logout API endpoint (commented out since backend is not ready)
+      // await authAPI.logout();
+      
+      // Clear tokens and update auth state
+      logout();
+      
+      // Navigate to login page
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Even if logout fails, clear local tokens and redirect
+      logout();
+      navigate('/login');
+    }
   };
 
   return (

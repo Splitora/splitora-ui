@@ -1,24 +1,31 @@
 import React from 'react';
-import { TabLayout, TabContent } from '../../components';
+import { useParams } from 'react-router-dom';
+import { TabContent } from '../../components';
 import './Home.css';
 
 const Home = () => {
-  return (
-    <div className="home">
-      <div className="home-header">
-        <h1>Splitora</h1>
-        <p className="home-subtitle">
-          Manage group expenses, track balances, and settle debts
-        </p>
-      </div>
+  const { tabId } = useParams();
 
-      <TabLayout>
-        <TabContent.GroupTab tabId="group" />
-        <TabContent.ProfileTab tabId="profile" />
-        <TabContent.ActivityTab tabId="activity" />
-        <TabContent.SettingsTab tabId="settings" />
-      </TabLayout>
-    </div>
+  // Render only the active tab based on the current route
+  const renderActiveTab = () => {
+    switch (tabId) {
+      case 'group':
+        return <TabContent.GroupTab />;
+      case 'profile':
+        return <TabContent.ProfileTab />;
+      case 'activity':
+        return <TabContent.ActivityTab />;
+      case 'settings':
+        return <TabContent.SettingsTab />;
+      default:
+        return <TabContent.GroupTab />;
+    }
+  };
+
+  return (
+    <>
+      {renderActiveTab()}
+    </>
   );
 };
 

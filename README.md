@@ -249,6 +249,180 @@ API base URL is configured via environment variables:
 export const API_BASE_URL = process.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
 ```
 
+#### Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+# API Configuration
+VITE_API_BASE_URL=http://localhost:8080/api
+
+# Development Settings
+VITE_APP_ENV=development
+VITE_DEBUG=true
+
+# Production Settings (uncomment for production)
+# VITE_API_BASE_URL=https://api.splitora.com/api
+# VITE_APP_ENV=production
+# VITE_DEBUG=false
+```
+
+#### API Service Usage
+
+The application includes a comprehensive API service module (`src/utils/api.js`) with the following features:
+
+- **Axios-based HTTP client** for reliable API communication
+- **Authentication handling** with JWT tokens and refresh tokens
+- **Automatic token refresh** - Handles expired tokens automatically
+- **Automatic error handling** and timeout management
+- **Request/response interceptors**
+- **Type-safe API methods** for all endpoints
+- **Response data extraction** - Automatically extracts data from `response.data.data` structure
+
+```javascript
+import { apiService, authAPI, groupsAPI, expensesAPI } from './utils';
+
+// Authentication
+const loginResponse = await authAPI.login({ email, password });
+const userProfile = await authAPI.getProfile();
+
+// Groups
+const groups = await groupsAPI.getGroups();
+const newGroup = await groupsAPI.createGroup({ name: 'Trip to Paris' });
+
+// Expenses
+const expenses = await expensesAPI.getExpenses(groupId);
+const newExpense = await expensesAPI.createExpense(groupId, {
+  name: 'Dinner',
+  amount: 50.00,
+  creditorId: userId,
+  debtors: [userId1, userId2]
+});
+
+// Using React hooks for better state management
+import { useAuth, useGroups, useExpenses } from './hooks';
+
+const MyComponent = () => {
+  const { login, getProfile } = useAuth();
+  const { getGroups, createGroup } = useGroups();
+  const { getExpenses } = useExpenses();
+
+  const handleLogin = async () => {
+    try {
+      const response = await login.execute({ email, password });
+      console.log('Login successful:', response);
+    } catch (error) {
+      console.error('Login failed:', error.message);
+    }
+  };
+
+  return (
+    <button onClick={handleLogin} disabled={login.loading}>
+      {login.loading ? 'Signing in...' : 'Sign In'}
+    </button>
+  );
+};
+```
+
+#### Available API Methods
+
+**Authentication (`authAPI`):**
+- `login(credentials)` - User login (stores both access and refresh tokens)
+- `register(userData)` - User registration (stores both access and refresh tokens)
+- `logout()` - User logout (sends refresh token to backend)
+- `refreshToken()` - Manually refresh access token
+- `getProfile()` - Get current user profile
+- `updateProfile(profileData)` - Update user profile
+
+**Groups (`groupsAPI`):**
+- `getGroups()` - Get all user groups
+- `getGroup(groupId)` - Get specific group
+- `createGroup(groupData)` - Create new group
+- `updateGroup(groupId, groupData)` - Update group
+- `deleteGroup(groupId)` - Delete group
+- `addMembers(groupId, memberIds)` - Add members to group
+- `removeMember(groupId, memberId)` - Remove member from group
+
+**Expenses (`expensesAPI`):**
+- `getExpenses(groupId)` - Get group expenses
+- `createExpense(groupId, expenseData)` - Create new expense
+- `updateExpense(groupId, expenseId, expenseData)` - Update expense
+- `deleteExpense(groupId, expenseId)` - Delete expense
+
+**Settlements (`settlementsAPI`):**
+- `getSettlements(groupId)` - Get group settlements
+- `markAsPaid(groupId, settlementId)` - Mark settlement as paid
+
+#### Response Structure
+
+The API service automatically handles the standard response structure where successful responses are wrapped in a `data` object:
+
+```javascript
+// API Response Structure
+{
+  "success": true,
+  "message": "Operation successful",
+  "data": {
+    // Actual response data here
+    "id": 1,
+    "name": "Group Name",
+    "members": [...]
+  }
+}
+
+// Error Response Structure
+{
+  "success": false,
+  "message": "Error message",
+  "error": "Detailed error information"
+}
+```
+
+The service automatically extracts the `data` property from successful responses and error messages from failed responses, so you can use the API methods directly without worrying about the wrapper structure.
+
+#### Refresh Token Functionality
+
+The application includes automatic refresh token handling:
+
+**Automatic Token Refresh:**
+- When a 401 error occurs, the system automatically attempts to refresh the access token
+- If refresh succeeds, the original request is retried automatically
+- If refresh fails, the user is redirected to the login page
+
+**Token Storage:**
+- Access tokens and refresh tokens are stored in localStorage
+- Both tokens are automatically managed by the API service
+- Tokens are cleared on logout or refresh failure
+
+**Proactive Token Refresh:**
+- The system checks token expiration every minute
+- Tokens are refreshed 5 minutes before expiration
+- This prevents token expiration during user activity
+
+**Usage Example:**
+```javascript
+import { useAuthState } from './hooks';
+
+const App = () => {
+  const { user, isLoading, isAuthenticated, logout } = useAuthState();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Login />;
+  }
+
+  return (
+    <div>
+      <p>Welcome, {user.username}!</p>
+      <button onClick={logout}>Logout</button>
+    </div>
+  );
+};
+```
+
 ## 🔍 Code Quality
 
 - **ESLint** configuration with React-specific rules
