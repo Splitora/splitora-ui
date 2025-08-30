@@ -136,7 +136,7 @@ const Login = () => {
           <div className="form-options">
             <label className="checkbox-label">
               <input type="checkbox" />
-              <span className="checkmark"></span>
+              <span className="checkmark"></span>{" "}
               Remember me
             </label>
             <Link to="/forgot-password" className="forgot-link">

@@ -3,7 +3,7 @@
  */
 
 // API Configuration
-export const API_BASE_URL = 'http://localhost:8081/api/v1';
+export const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL + '/api/v1' || 'http://localhost:8080/api/v1';
 
 // Local Storage Keys
 export const STORAGE_KEYS = {

@@ -231,15 +231,10 @@ apiClient.interceptors.response.use(
  * @returns {Promise<Object>} API response
  */
 const apiRequest = async (endpoint, config = {}) => {
-  try {
-    const response = await apiClient.request({
-      url: endpoint,
-      ...config
-    });
-    return response;
-  } catch (error) {
-    throw error;
-  }
+  return await apiClient.request({
+    url: endpoint,
+    ...config
+  });
 };
 
 /**
@@ -344,7 +339,7 @@ export const authAPI = {
    * @returns {Promise<Object>} Registration response
    */
   register: async (userData) => {
-    const response = await apiService.post('/auth/register', userData);
+    const response = await apiService.post('/user/register', userData);
     if (response.accessToken) {
       setAuthToken(response.accessToken);
     }

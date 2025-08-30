@@ -2,3 +2,18 @@
 @import '../Login/Login.css';
 
 /* You can add signup-specific overrides here if needed */ 
+.phone-input-container {
+    display: grid;
+    align-items: center;
+    grid-template-columns: auto 1fr;
+}
+
+.phone-input-container select {
+    height: 100%;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.phone-input-container input {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}

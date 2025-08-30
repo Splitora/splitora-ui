@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../../components';
+import { useAuth } from '../../hooks';
 import './Signup.css';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
-    phone: '',
+    phone: {
+      countryCode: +1,
+      phoneNumber: ''
+    },
     password: '',
     confirmPassword: ''
   });
+  const navigate = useNavigate();
+  const { register } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -18,10 +24,22 @@ const Signup = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+
+    if (name === "countryCode" || name === "phoneNumber") {
+      setFormData(prev => ({
+        ...prev,
+        phone: {
+          ...prev.phone,
+          [name]: value
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -48,9 +66,9 @@ const Signup = () => {
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email';
     }
-    if (!formData.phone) {
+    if (!formData.phone?.countryCode || !formData.phone?.phoneNumber) {
       newErrors.phone = 'Phone number is required';
-    } else if (!/^\+?\d{7,15}$/.test(formData.phone.replace(/[-\s()]/g, ''))) {
+    } else if (!/^\+?\d{7,15}$/.test(formData.phone.phoneNumber.replace(/[-\s()]/g, ''))) {
       newErrors.phone = 'Please enter a valid phone number';
     }
     if (!formData.password) {
@@ -74,11 +92,12 @@ const Signup = () => {
     }
     setIsLoading(true);
     try {
-      // TODO: Implement actual signup API call
       console.log('Signup attempt:', formData);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      // TODO: Handle successful signup
-      console.log('Signup successful');
+
+      const response = await register.execute(formData);
+      console.log('Signup successful:', response);
+
+      navigate('/login');
     } catch (error) {
       console.error('Signup failed:', error);
       setErrors({ general: 'Signup failed. Please try again.' });
@@ -126,15 +145,28 @@ const Signup = () => {
           </div>
           <div className="form-group">
             <label htmlFor="phone">Phone Number</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="e.g. +15551234567"
-              className={errors.phone ? 'error' : ''}
-            />
+            <div className="phone-input-container">
+              <select
+                id="countryCode"
+                name="countryCode"
+                value={formData.phone.countryCode}
+                onChange={handleChange}
+                className={errors.phone ? 'error' : ''}
+              >
+                <option value="+1">+1</option>
+                <option value="+91">+91</option>
+                <option value="+44">+44</option>
+              </select>
+              <input
+                type="tel"
+                id="phone"
+                name="phoneNumber"
+                value={formData.phone.phoneNumber}
+                onChange={handleChange}
+                placeholder="e.g. 551234567"
+                className={errors.phone ? 'error' : ''}
+              />
+            </div>
             {errors.phone && <span className="field-error">{errors.phone}</span>}
           </div>
           <div className="form-group">
