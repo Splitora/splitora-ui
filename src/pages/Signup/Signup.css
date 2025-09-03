@@ -16,4 +16,5 @@
 .phone-input-container input {
     border-top-left-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
+    width: 100%;
 }
