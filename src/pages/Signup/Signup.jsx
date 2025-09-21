@@ -100,7 +100,7 @@ const Signup = () => {
       navigate('/login');
     } catch (error) {
       console.error('Signup failed:', error);
-      setErrors({ general: 'Signup failed. Please try again.' });
+      setErrors({ general: 'Signup failed: ' + error.message });
     } finally {
       setIsLoading(false);
     }
